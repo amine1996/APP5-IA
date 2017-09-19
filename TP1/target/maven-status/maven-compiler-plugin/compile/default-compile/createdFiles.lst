@@ -1,0 +1,16 @@
+monjeu/dominos/PlateauDominos.class
+monjeu/x/PlateauX.class
+jeux/modele/CoupJeu.class
+jeux/alg/AlgoJeu.class
+jeux/modele/PlateauJeu.class
+monjeu/x/CoupX.class
+monjeu/dominos/HeuristiquesDominos$1.class
+jeux/alg/Heuristique.class
+monjeu/dominos/CoupDominos.class
+monjeu/dominos/HeuristiquesDominos.class
+jeux/modele/joueur/Joueur.class
+monjeu/Nim/PlateauNim.class
+monjeu/dominos/HeuristiquesDominos$2.class
+monjeu/dominos/PartieDominos.class
+jeux/alg/Minimax.class
+monjeu/Nim/CoupNim.class
