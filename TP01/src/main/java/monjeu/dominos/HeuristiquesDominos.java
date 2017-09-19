@@ -11,7 +11,7 @@ public class HeuristiquesDominos{
 				
 		public int eval(PlateauJeu p, Joueur j){
 			PlateauDominos pDomino = (PlateauDominos) p;
-			return pDomino.nbCoupsBlanc();
+			return 1000/(1 + pDomino.nbCoupsBlanc());
 		}
 	};
 
@@ -19,7 +19,11 @@ public class HeuristiquesDominos{
 	
 		public int eval(PlateauJeu p, Joueur j){
 			PlateauDominos pDomino = (PlateauDominos) p;
-			return pDomino.nbCoupsNoir();
+
+			if(pDomino.nbCoupsBlanc() == 0)
+				return Integer.MIN_VALUE;
+
+			return -(1000 * pDomino.nbCoupsNoir());
 		}
 	};
 
