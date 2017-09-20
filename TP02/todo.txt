@@ -1,0 +1,8 @@
+A faire :
+	Fonction isFeedingEnemy(joueur, coup)
+	Condtion :
+		Si quand le joueur n'a plus de graine mon coup lui donne à manger et mon coup est meilleur si je lui donne à manger quand il est affamé
+		Sinon fin de partie
+
+	megaMax
+	alpha beta
