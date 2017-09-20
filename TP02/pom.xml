@@ -5,7 +5,7 @@
     
     <groupId>fr.upsud.polytech</groupId>
 	<!-- Remplacez ici Nom1 et Nom2 par vos noms de votre binome dans l'ordre alphabetique -->
-    <artifactId>app5_ia_tp1</artifactId>
+    <artifactId>app5_ia_tp2</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
     
@@ -23,7 +23,7 @@
 
     
     <!-- Remplacez ici Nom1 et Nom2 par vos noms de votre binome dans l'ordre alphabetique -->
-    <name>app5_ia_tp1_Nom1_Nom2</name>
+    <name>app5_ia_tp1_ISMAIL_GIRARD</name>
 
 
 
@@ -47,7 +47,7 @@
 	        <configuration>
 	            <archive>
 	                <manifest>
-	                    <mainClass>monjeu.dominos.PartieDominos</mainClass>
+	                    <mainClass>monjeu.awale.PartieAwale</mainClass>
 	                </manifest>
 	            </archive>
 	        </configuration>

@@ -14,7 +14,7 @@ public class Minimax implements AlgoJeu {
 
     /** La profondeur de recherche par défaut
      */
-    private final static int PROFMAXDEFAUT = 4;
+    private final static int PROFMAXDEFAUT = 6;
 
    
     // -------------------------------------------
@@ -98,24 +98,24 @@ public class Minimax implements AlgoJeu {
     //A vous de jouer pour implanter Minimax
 
     public int maxMin(PlateauJeu p, int prof){
-        
         int meilleur = Integer.MIN_VALUE;
         ArrayList<CoupJeu> lesCoupsPossibles = p.coupsPossibles(joueurMax);
 
+        //System.out.println("Profondeur actuelle " + prof);
         if(prof > profMax || lesCoupsPossibles.size() == 0){            
+
             return h.eval(p, joueurMax);
         }
 
-        for (CoupJeu coup : lesCoupsPossibles) {            
+        for (CoupJeu coup : lesCoupsPossibles) {         
             PlateauJeu cp = p.copy();       
             cp.joue(joueurMax, coup);
-            meilleur = Integer.max(meilleur, minMax(cp, prof++));
+            meilleur = Integer.max(meilleur, minMax(cp, ++prof));
         }
         return meilleur;
     }  
 
     public int minMax(PlateauJeu p, int prof){
-        
         int pire = Integer.MAX_VALUE;
         ArrayList<CoupJeu> lesCoupsPossibles = p.coupsPossibles(joueurMin);
 
@@ -126,7 +126,7 @@ public class Minimax implements AlgoJeu {
         for (CoupJeu coup : lesCoupsPossibles) {            
             PlateauJeu cp = p.copy();       
             cp.joue(joueurMin, coup);
-            pire = Integer.min(pire, maxMin(cp, prof++));
+            pire = Integer.min(pire, maxMin(cp, ++prof));
         }
         return pire;
     }

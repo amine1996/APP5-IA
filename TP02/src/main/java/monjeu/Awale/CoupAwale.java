@@ -1,4 +1,4 @@
-package monjeu.Awale;
+package monjeu.awale;
 import jeux.modele.CoupJeu;
 
 public class CoupAwale implements CoupJeu{
@@ -7,10 +7,13 @@ public class CoupAwale implements CoupJeu{
 
 	private int trou;
 
+	private int nbBilles;
+
 	/****** Clonstructeur *******/ 
 
-	public CoupAwale(int trou) {
-		trou = trou;
+	public CoupAwale(int trou, int nbBilles) {
+		this.trou = trou;
+		this.nbBilles = nbBilles;
 	}
 
 	/****** Accesseurs *******/ 
@@ -22,7 +25,7 @@ public class CoupAwale implements CoupJeu{
 	/****** Accesseurs *******/ 
 
 	public String toString() {
-		return "("+trou+")";
+		return "("+(trou+1)+"," + nbBilles + ")";
 	}
 }
 

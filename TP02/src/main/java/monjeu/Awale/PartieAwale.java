@@ -1,4 +1,4 @@
-package monjeu.Awale;
+package monjeu.awale;
 
 import java.util.ArrayList;
 
@@ -12,18 +12,18 @@ public class PartieAwale {
 
     public static void main(String[] args) {
 
-        Joueur jBlanc = new Joueur("Blanc");
-        Joueur jNoir = new Joueur("Noir");
+        Joueur joueur1 = new Joueur("1");
+        Joueur joueur2 = new Joueur("2");
 
         Joueur[] lesJoueurs = new Joueur[2];
 
-        lesJoueurs[0] = jBlanc;
-        lesJoueurs[1] = jNoir;
+        lesJoueurs[0] = joueur1;
+        lesJoueurs[1] = joueur2;
 
 
         AlgoJeu AlgoJoueur[] = new AlgoJeu[2];
-        AlgoJoueur[0] = new Minimax(HeuristiquesAwale.hblanc, jBlanc, jNoir); // Il faut remplir la méthode !!!
-        AlgoJoueur[1] = new Minimax(HeuristiquesAwale.hnoir, jNoir, jBlanc);  // Il faut remplir la méthode !!!
+        AlgoJoueur[0] = new Minimax(HeuristiquesAwale.hblanc, joueur1, joueur2); // Il faut remplir la méthode !!!
+        AlgoJoueur[1] = new Minimax(HeuristiquesAwale.hnoir, joueur2, joueur1);  // Il faut remplir la méthode !!!
 
         System.out.println("Jeux n°1 : Algorithmes pour les Jeux");
         System.out.println("Etat Initial du plateau de jeu:");
@@ -32,8 +32,8 @@ public class PartieAwale {
         CoupJeu meilleurCoup = null;
         int jnum;
 
-        PlateauJeu plateauCourant = new PlateauDominos();
-        PlateauDominos.setJoueurs(jBlanc, jNoir);
+        PlateauJeu plateauCourant = new PlateauAwale();
+        PlateauAwale.setJoueurs(joueur1, joueur2);
         // Pour savoir qui joue "noir" et qui joue "blanc"
 
 
@@ -48,7 +48,7 @@ public class PartieAwale {
             // Ce n'est pas tres efficace, mais c'est plus rapide... a écrire...
             ArrayList<CoupJeu> lesCoupsPossibles = plateauCourant.coupsPossibles(lesJoueurs[jnum]);
             System.out.println("Coups possibles pour" + lesJoueurs[jnum] + " : " + lesCoupsPossibles);
-            if (lesCoupsPossibles.size() > 0) {
+            if (lesCoupsPossibles.size() > 0 && !plateauCourant.finDePartie()) {
                 // On écrit le plateau
 
                 // Lancement de l'algo de recherche du meilleur coup
