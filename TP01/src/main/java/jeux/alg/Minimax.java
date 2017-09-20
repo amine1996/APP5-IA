@@ -74,7 +74,7 @@ public class Minimax implements AlgoJeu {
         for (CoupJeu coup : lesCoupsPossibles) {            
             PlateauJeu cp = p.copy();       
             cp.joue(joueurMax, coup);
-            int tmp = minMax(cp, 1);
+            int tmp = maxMin(cp, 1);
             if ( meilleur < tmp){
                 meilleur = tmp ;
                 mCoup = coup;
