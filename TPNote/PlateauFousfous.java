@@ -94,7 +94,7 @@ public class PlateauFousfous implements PlateauJeu {
 					continue;
 
 				String[] splitted = currentLine.split(" ");
-				//Comment line
+
 				if(splitted.length == 3)
 				{
 					int lineNumber = -1;
@@ -130,7 +130,24 @@ public class PlateauFousfous implements PlateauJeu {
 
 	public void saveToFile(String filename)
 	{
-		//TODO
+		File outputFile = new File(filename); 
+		FileWriter fileWriter = new FileWriter(outputFile);
+
+		String save = "";
+		for(int i=0;i<TAILLE;i++)
+		{
+			save += String.valueOf(i+1) + " ";
+			for(int j=0;j<TAILLE;j++)
+			{
+				if(plateau[i][j] == BLANC)
+					save += "b";
+				else if(plateau[i][j] == NOIR)
+					save += "n";
+				else
+					save += "-";
+			}
+			save += " " + String.valueOf(i+1);
+		}
 	}
 
 	public void estValide(String move, String player)
