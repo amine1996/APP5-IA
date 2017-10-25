@@ -26,10 +26,12 @@ public class PlateauFousfous implements PlateauJeu {
 	/** Le joueur que joue "Blanc" */
 	final static String blanc = "blanc";
 	final static char pionBlanc = 'b';
+	public int scoreBlanc = 0;
 
 	/** Le joueur que joue "noir" */
 	final static String noir = "noir";
 	final static char pionNoir = 'n';
+	public int scoreNoir = 0;
 
 
 	/* *********** Attributs  *********** */
@@ -53,18 +55,6 @@ public class PlateauFousfous implements PlateauJeu {
 					plateau[i][j] = BLANC;
 				else if(i%2 == 1 && j%2 == 0)
 					plateau[i][j] = NOIR;
-			}
-		}
-	}
-
-	public PlateauFousfous(int import[][])
-	{
-		plateau = new int[TAILLE][TAILLE];
-		for(int i=0; i < TAILLE; i++)
-		{
-			for (int j=0; j < TAILLE; j++)
-			{
-				plateau[i][j] = import[i][j];
 			}
 		}
 	}
@@ -100,23 +90,35 @@ public class PlateauFousfous implements PlateauJeu {
 
 			while ((currentLine = br.readLine()) != null) 
 			{
-				int lineNumber = -1;
-				for(int i = 0; i < currentLine.length() ; i++) 
-				{ 
-					char c = currentLine.charAt(i); 
-					System.out.println(c);		
+				if(currentLine.charAt(0) == '%')
+					continue;
 
-					//First char
-					if(i== 0)
+				String[] splitted = currentLine.split(" ");
+				//Comment line
+				if(splitted.length == 3)
+				{
+					int lineNumber = -1;
+					if(Character.isDigit(splitted[0].charAt(0)))
+						int lineNumber = Character.getNumericValue(splitted[0].charAt(0)) - 1;
+
+					if(lineNumber != -1)
 					{
-						//Comment line
-						if(c == '%')
-							break;
+						String lignePlateau = splitted[1];
+						for(int i=0;i<splitted[1].length;i++)
+						{
+							plateau[lineNumber][i] = lignePlateau.charAt(i);
+						}
 					}
-
-					//TODO
-
 				}
+				else
+				{
+					System.out.println("Erreur a besoin de 3 elements");
+					System.exit(-1);
+				}
+			
+				
+
+				
 			}
 
 			fileReader.close();
