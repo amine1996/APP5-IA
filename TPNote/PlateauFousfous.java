@@ -24,10 +24,13 @@ public class PlateauFousfous implements PlateauJeu {
 	private final static int USELESS = 3;
 
 	/** Le joueur que joue "Blanc" */
-	private static Joueur joueurBlanc;
+	final static String blanc = "blanc";
+	final static char pionBlanc = 'b';
 
 	/** Le joueur que joue "noir" */
-	private static Joueur joueurNoir;
+	final static String noir = "noir";
+	final static char pionNoir = 'n';
+
 
 	/* *********** Attributs  *********** */
 
@@ -70,16 +73,15 @@ public class PlateauFousfous implements PlateauJeu {
 
 
 	public static void setJoueurs(Joueur jb, Joueur jn) {
-		joueurBlanc = jb;
-		joueurNoir = jn;
+		//TODO (PAS OBLIGATOIRE)
 	}
 
 	public boolean isJoueurBlanc(Joueur jb) {
-		return joueurBlanc.equals(jb);
+		//TODO (PAS OBLIGATOIRE)
 	}
 
 	public boolean isJoueurNoir(Joueur jn) {
-		return joueurNoir.equals(jn);
+		//TODO (PAS OBLIGATOIRE)
 	}
 
 
