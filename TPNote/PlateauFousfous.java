@@ -146,8 +146,12 @@ public class PlateauFousfous implements PlateauJeu {
 				else
 					save += "-";
 			}
-			save += " " + String.valueOf(i+1);
+			save += " " + String.valueOf(i+1) + "\n";
 		}
+
+		fileWriter.write(save);
+		fileWriter.flush();
+		fileWriter.close();
 	}
 
 	public void estValide(String move, String player)
