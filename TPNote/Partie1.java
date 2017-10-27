@@ -1,3 +1,6 @@
+package fousfous;
+
+
 public interface Partie1 
 {
 	public void setFromFile(String fileName);
