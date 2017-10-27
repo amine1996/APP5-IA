@@ -12,9 +12,6 @@ class Main {
         PlateauFousfous game = new PlateauFousfous();
         MoveHistory.setGame(game);
 
-        //Setting game from save.txt file
-        game.setFromFile("save.txt");
-
         //Printing game
         System.out.println(game);
 
@@ -28,7 +25,11 @@ class Main {
         //Playing
         game.play(moveList[1],"white");
         System.out.println(game);
-        System.out.println(MoveHistory.getString());   
+
+        //Printing play history
+        System.out.println(MoveHistory.getString());  
+
+        //Popping last move 
         MoveHistory.pop();
         System.out.println(game);            
    }

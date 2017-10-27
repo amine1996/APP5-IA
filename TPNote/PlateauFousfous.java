@@ -320,7 +320,7 @@ public class PlateauFousfous implements Partie1 {
 
 			if(plateau[coup.endRow][coup.endColumn] == enemy)
 				incrementScore(player);
-				
+
 			plateau[coup.endRow][coup.endColumn] = plateau[coup.startRow][coup.startColumn];
 			plateau[coup.startRow][coup.startColumn] = EMPTY;
 
@@ -330,7 +330,7 @@ public class PlateauFousfous implements Partie1 {
 
 	public boolean finDePartie()
 	{
-		if(scoreWhite == 16 || scoreBlack == 16)
+		if(scoreWhite >= 16 || scoreBlack >= 16)
 			return true;
 		return false;
 	}
