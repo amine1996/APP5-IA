@@ -12,7 +12,6 @@ import java.io.IOException;
 
 import fousfous.CoupFousfous;
 import fousfous.MoveHistory;
-
 import fousfous.Partie1;
 
 public class PlateauFousfous implements Partie1 {
@@ -20,7 +19,7 @@ public class PlateauFousfous implements Partie1 {
 	/* *********** constantes *********** */
 
 	/** Taille de la grille (Carré) */
-	public final static int TAILLE = 8;
+	public final static int SIZE = 8;
 
 	/* *********** Paramètres de classe *********** */
 
@@ -49,11 +48,11 @@ public class PlateauFousfous implements Partie1 {
 
 	public PlateauFousfous()
 	{
-		plateau = new int[TAILLE][TAILLE];
+		plateau = new int[SIZE][SIZE];
 		
-		for(int i=0; i < TAILLE; i++)
+		for(int i=0; i < SIZE; i++)
 		{
-			for (int j=0; j < TAILLE; j++)
+			for (int j=0; j < SIZE; j++)
 			{
 				if(i%2 == j%2)
 					plateau[i][j] = USELESS;
@@ -66,6 +65,8 @@ public class PlateauFousfous implements Partie1 {
 	}
 
 	/************* Autres méthodes ****************/
+
+	//Get ally depending on player
 	public int getAlly(String player)
 	{
 		if(player == WHITE_PLAYER)
@@ -74,6 +75,7 @@ public class PlateauFousfous implements Partie1 {
 		return BLACK;
 	}
 
+	//Get enemy depending on player
 	public int getEnemy(String player)
 	{
 		if(player == BLACK_PLAYER)
@@ -82,6 +84,7 @@ public class PlateauFousfous implements Partie1 {
 		return BLACK;
 	}
 
+	//Increment score of player given on parameter
 	public void incrementScore(String player)
 	{
 		if(player == BLACK_PLAYER)
@@ -90,6 +93,7 @@ public class PlateauFousfous implements Partie1 {
 			scoreWhite++;
 	}
 
+	//Decrement score of player given on parameter
 	public void decrementScore(String player)
 	{
 		if(player == BLACK_PLAYER)
@@ -98,16 +102,19 @@ public class PlateauFousfous implements Partie1 {
 			scoreWhite--;
 	}
 
+	//Set score of white player
 	public void setScoreWhite(int score)
 	{
 		scoreWhite = score;
 	}
 
+	//Set score of black player
 	public void setScoreBlack(int score)
 	{
 		scoreBlack = score;
 	}
 
+	//Set value for a coordinates in the game
 	public void setCase(int row, int col, int value)
 	{
 		plateau[row][col] = value;
@@ -140,6 +147,7 @@ public class PlateauFousfous implements Partie1 {
 			{
 				while ((currentLine = buffReader.readLine()) != null) 
 				{
+					//Comment line
 					if(currentLine.charAt(0) == '%')
 						continue;
 
@@ -155,6 +163,9 @@ public class PlateauFousfous implements Partie1 {
 							String lignePlateau = splitted[1];
 							for(int i=0;i<splitted[1].length();i++)
 							{
+								if(lineNumber%2 == i%2)
+									continue;
+
 								if(lignePlateau.charAt(i) == '-')
 									plateau[lineNumber][i] = EMPTY;
 								else if(lignePlateau.charAt(i) == WHITE_CHAR)
@@ -166,7 +177,7 @@ public class PlateauFousfous implements Partie1 {
 					}
 					else
 					{
-						System.out.println("Erreur a besoin de 3 elements");
+						System.out.println("Malformed save file");
 						System.exit(-1);
 					}		
 				}
@@ -190,10 +201,10 @@ public class PlateauFousfous implements Partie1 {
 
 			String save = "";
 			save += "% ABCDEFGH  \n";
-			for(int i=0;i<TAILLE;i++)
+			for(int i=0;i<SIZE;i++)
 			{
 				save += String.valueOf(i+1) + " ";
-				for(int j=0;j<TAILLE;j++)
+				for(int j=0;j<SIZE;j++)
 				{
 					if(plateau[i][j] == WHITE)
 						save += WHITE_CHAR;
@@ -215,6 +226,7 @@ public class PlateauFousfous implements Partie1 {
 		}
 	}
 
+	//Return true is you are threatening an enemy after your move
 	public boolean isThreatening(int startRow, int startColumn, String player)
 	{
 		boolean threatening = false;
@@ -227,7 +239,7 @@ public class PlateauFousfous implements Partie1 {
 			{
 				int testRow = startRow;
 				int testColumn = startColumn;
-				while((testRow+row < TAILLE && testRow+row >= 0) && (testColumn+col < TAILLE && testColumn+col  >= 0))
+				while((testRow+row < SIZE && testRow+row >= 0) && (testColumn+col < SIZE && testColumn+col  >= 0))
 				{
 					testRow += row;
 					testColumn += col;
@@ -243,18 +255,19 @@ public class PlateauFousfous implements Partie1 {
 		return false;
 	}
 
+	//Return true if a move is valid
 	public boolean estValide(String move, String player)
 	{
 		int ally = getAlly(player);
 		int enemy = getEnemy(player);
 
 		CoupFousfous coup = new CoupFousfous(move);
-		System.out.println("start : "+coup.startRow+ " "+coup.startColumn);
-		System.out.println("end : "+coup.endRow + " " + coup.endColumn);
 
+		//If piece to move doesn't belong to the player
 		if(plateau[coup.startRow][coup.startColumn] != ally)
 			return false;
 
+		//If non-playable case
 		if(plateau[coup.endRow][coup.endColumn] == USELESS)
 			return false;
 
@@ -262,9 +275,11 @@ public class PlateauFousfous implements Partie1 {
 		if(Math.abs(coup.startRow - coup.endRow) != Math.abs(coup.startColumn - coup.endColumn))
 			return false;
 
+		//If taking enemy piece
 		if(plateau[coup.endRow][coup.endColumn] == enemy)
 			return true;
 
+		//If is threating after move return true
 		return isThreatening(coup.endRow,coup.endColumn,player);
 	}
 
@@ -273,30 +288,63 @@ public class PlateauFousfous implements Partie1 {
 		int ally = getAlly(player);
 		int enemy = getEnemy(player);
 
+		boolean hasTakenEnemy = false;
+
 		ArrayList<String> coupsPossibles = new ArrayList<String>();
-		for(int i=0;i<TAILLE;i++)
+		ArrayList<CoupFousfous> coupsPossiblesTemp = new ArrayList<CoupFousfous>();
+
+		for(int i=0;i<SIZE;i++)
 		{
-			for(int j=0;j<TAILLE;j++)
+			for(int j=0;j<SIZE;j++)
 			{
 				if(plateau[i][j] == ally)
 				{
+					hasTakenEnemy = false;
+					coupsPossiblesTemp = new ArrayList<CoupFousfous>();
+
 					for(int row=-1;row<=1;row+=2)
 					{
 						for(int col=-1;col<=1;col+=2)
 						{
 							int testRow = i;
 							int testColumn = j;
-							while((testRow+row < TAILLE && testRow+row >= 0) && (testColumn+col < TAILLE && testColumn+col  >= 0))
+							while((testRow+row < SIZE && testRow+row >= 0) && (testColumn+col < SIZE && testColumn+col  >= 0))
 							{
 								testRow += row;
 								testColumn += col;
 								CoupFousfous coup = new CoupFousfous(j,i,testColumn,testRow);
-								coupsPossibles.add(coup.move);
 
+								//If has taken moves
 								if(plateau[testRow][testColumn] == enemy)
+								{
+									coup.setTakeEnemy(true);
+									hasTakenEnemy = true;
+								}
+
+								coupsPossiblesTemp.add(coup);
+
+								//Useless to keep looking
+								if(hasTakenEnemy)
 									break;
 							}
 						}
+					}
+
+					//Remove bad moves
+					for(int k=0;k<coupsPossiblesTemp.size();k++)
+					{
+						System.out.println(coupsPossiblesTemp.get(k));	
+						if(hasTakenEnemy && !coupsPossiblesTemp.get(k).takeEnemy)
+						{
+							coupsPossiblesTemp.remove(k);
+							k--;
+						}
+					}
+
+					//Add good moves
+					for(int k=0;k<coupsPossiblesTemp.size();k++)
+					{
+						coupsPossibles.add(coupsPossiblesTemp.get(k).move);
 					}
 				}
 			}
@@ -347,10 +395,10 @@ public class PlateauFousfous implements Partie1 {
 	{
 		String res = "";
 		res += "% ABCDEFGH  \n";
-		for(int i=0;i<TAILLE;i++)
+		for(int i=0;i<SIZE;i++)
 		{
 			res += String.valueOf(i+1) + " ";
-			for(int j=0;j<TAILLE;j++)
+			for(int j=0;j<SIZE;j++)
 			{
 				if(plateau[i][j] == WHITE)
 					res += WHITE_CHAR;
@@ -371,5 +419,45 @@ public class PlateauFousfous implements Partie1 {
 		out.println(this.toString());		
 	}
 
+   public static void main (String[] args)
+   {
+        //New game
+        PlateauFousfous game = new PlateauFousfous();
+        MoveHistory.setGame(game);
+
+		//Loading a saved game
+		game.setFromFile("input.txt");
+
+        //Printing game
+        System.out.println(game);
+
+        //Getting possible move list for player white
+        String [] moveList = game.mouvementPossibles("white");
+
+		//Printing of list of valid moves
+		ArrayList<String> validMoves = new ArrayList<String>();
+		for(int i=0;i<moveList.length - 1;i++)
+		{
+			if(game.estValide(moveList[i],"white"))
+			{
+				validMoves.add(moveList[i]);
+				System.out.println(moveList[i]);
+			}
+		}
+        //Playing moveList[1]
+		System.out.println("validMoves.get(0) : "+validMoves.get(0));
+        game.play(validMoves.get(0),"white");
+        System.out.println(game);
+
+		//Saving game after a move
+		game.saveToFile("save.txt");
+
+        //Printing play history
+        System.out.println(MoveHistory.getString());  
+
+        //Popping last move 
+        MoveHistory.pop();
+        System.out.println(game);            
+   }
 }
 

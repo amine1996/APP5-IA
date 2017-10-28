@@ -27,6 +27,7 @@ public final class MoveHistory
         game = userGame;
     }
 
+    //Add a move and states to history
 	public static void push(String move, int oldStartState, int oldEndState, int scoreWhite, int scoreBlack)
 	{
         if(game != null)
@@ -39,6 +40,7 @@ public final class MoveHistory
         }
     }
 
+    //Pop a move and states from history
     public static void pop()
     {
         if(game != null && moves.size() > 0)

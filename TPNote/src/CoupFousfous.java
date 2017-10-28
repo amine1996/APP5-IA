@@ -2,11 +2,12 @@ package fousfous;
 
 public class CoupFousfous
 {
+    //String move : A1-B2
     public String move;
 
+    //Coordinates
     public int startColumn;
     public int startRow;
-
     public int endColumn;
     public int endRow;
 
@@ -14,6 +15,8 @@ public class CoupFousfous
 
     public String player;
 
+    public boolean takeEnemy;
+    
     public CoupFousfous(String move)
     {
         this.move = move;
@@ -35,11 +38,17 @@ public class CoupFousfous
         moveToString();
     }
 
+    public void setTakeEnemy(boolean takeEnemy)
+    {
+        this.takeEnemy = takeEnemy;
+    }
+
     public void setPlayer(String player)
     {
         this.player = player;
     }
     
+    //Convert coordinates to a string move
     public void moveToString()
     {
         String res = "";
@@ -54,7 +63,7 @@ public class CoupFousfous
         this.move = res;
     }
 
-
+    //Convert a string move to coordinates
     public void moveToInt()
     {
 
