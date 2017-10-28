@@ -1,4 +1,4 @@
 Commands :
 
-- javac -d . *.java
+- javac -d . ./src/*.java
 - java fousfous.Main
