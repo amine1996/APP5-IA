@@ -1,4 +1,4 @@
 Commands :
 
 - javac -d . ./src/*.java
-- java fousfous.Main
+- java fousfous.PlateauFousfous

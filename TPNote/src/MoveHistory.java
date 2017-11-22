@@ -5,7 +5,9 @@ import java.util.ArrayList;
 
 public final class MoveHistory 
 {
-    private static PlateauFousfous game = null;
+    private static PartieFousfous controller;
+    private static PlateauFousfous game;
+
 	private static ArrayList<String> moves = new ArrayList<String>();
 	private static ArrayList<Integer> oldStartStates = new ArrayList<Integer>();
 	private static ArrayList<Integer> oldEndStates = new ArrayList<Integer>();
@@ -14,7 +16,6 @@ public final class MoveHistory
 
 	private MoveHistory()
 	{
-        game = null;
 		moves = new ArrayList<String>();
 		oldStartStates = new ArrayList<Integer>();
 		oldEndStates = new ArrayList<Integer>();
@@ -22,9 +23,10 @@ public final class MoveHistory
 		oldScoresBlack = new ArrayList<Integer>();
 	}
 
-    public static void setGame(PlateauFousfous userGame)
+    public static void setController(PartieFousfous controller)
     {
-        game = userGame;
+        controller = controller;
+        game = controller.getGame();
     }
 
     //Add a move and states to history
@@ -53,8 +55,8 @@ public final class MoveHistory
 
             game.setCase(lastMove.endRow,lastMove.endColumn,lastEndState);
             game.setCase(lastMove.startRow,lastMove.startColumn,lastStartState);
-            game.setScoreWhite(lastScoreWhite);
-            game.setScoreBlack(lastScoreBlack);
+            controller.getWhitePlayer().setScore(lastScoreWhite);
+            controller.getBlackPlayer().setScore(lastScoreBlack);
 
             moves.remove(moves.size() - 1);
             oldStartStates.remove(oldStartStates.size() - 1);

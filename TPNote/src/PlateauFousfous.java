@@ -13,8 +13,10 @@ import java.io.IOException;
 import fousfous.CoupFousfous;
 import fousfous.MoveHistory;
 import fousfous.Partie1;
+import fousfous.PartieFousfous;
+import fousfous.Joueur;
 
-public class PlateauFousfous implements Partie1 {
+public class PlateauFousfous implements Partie1{
 
 	/* *********** constantes *********** */
 
@@ -24,20 +26,12 @@ public class PlateauFousfous implements Partie1 {
 	/* *********** Paramètres de classe *********** */
 
 	/** Enumération pour représenter l'état d'une case */
-	private final static int EMPTY = 0;
-	private final static int WHITE = 1;
-	private final static int BLACK = 2;
-	private final static int USELESS = 3;
+	public final static int EMPTY = 0;
+	public final static int WHITE = -1;
+	public final static int BLACK = 1;
+	public final static int USELESS = 3;
 
-	/** Le joueur que joue "white" */
-	final static String WHITE_PLAYER = "white";
-	final static char WHITE_CHAR = 'b';
-	public int scoreWhite = 0;
-
-	/** Le joueur que joue "black" */
-	final static String BLACK_PLAYER = "black";
-	final static char BLACK_CHAR = 'n';
-	public int scoreBlack = 0;
+	public PartieFousfous controller;
 
 	/* *********** Attributs  *********** */
 
@@ -46,72 +40,23 @@ public class PlateauFousfous implements Partie1 {
 
 	/************* Constructeurs ****************/ 
 
-	public PlateauFousfous()
+	public PlateauFousfous(PartieFousfous controller)
 	{
-		plateau = new int[SIZE][SIZE];
+		this.controller = controller;
+		this.plateau = new int[SIZE][SIZE];
 		
 		for(int i=0; i < SIZE; i++)
 		{
 			for (int j=0; j < SIZE; j++)
 			{
 				if(i%2 == j%2)
-					plateau[i][j] = USELESS;
+					this.plateau[i][j] = USELESS;
 				else if(i%2 == 0 && j%2 == 1)
-					plateau[i][j] = WHITE;
+					this.plateau[i][j] = WHITE;
 				else if(i%2 == 1 && j%2 == 0)
-					plateau[i][j] = BLACK;
+					this.plateau[i][j] = BLACK;
 			}
 		}
-	}
-
-	/************* Autres méthodes ****************/
-
-	//Get ally depending on player
-	public int getAlly(String player)
-	{
-		if(player == WHITE_PLAYER)
-			return WHITE;
-
-		return BLACK;
-	}
-
-	//Get enemy depending on player
-	public int getEnemy(String player)
-	{
-		if(player == BLACK_PLAYER)
-			return WHITE;
-
-		return BLACK;
-	}
-
-	//Increment score of player given on parameter
-	public void incrementScore(String player)
-	{
-		if(player == BLACK_PLAYER)
-			scoreBlack++;
-		else if (player == WHITE_PLAYER)
-			scoreWhite++;
-	}
-
-	//Decrement score of player given on parameter
-	public void decrementScore(String player)
-	{
-		if(player == BLACK_PLAYER)
-			scoreBlack--;
-		else if (player == WHITE_PLAYER)
-			scoreWhite--;
-	}
-
-	//Set score of white player
-	public void setScoreWhite(int score)
-	{
-		scoreWhite = score;
-	}
-
-	//Set score of black player
-	public void setScoreBlack(int score)
-	{
-		scoreBlack = score;
 	}
 
 	//Set value for a coordinates in the game
@@ -119,7 +64,6 @@ public class PlateauFousfous implements Partie1 {
 	{
 		plateau[row][col] = value;
 	}
-
 
 	/************* Méthodes de l'interface Partie1    ****************/
 
@@ -166,12 +110,15 @@ public class PlateauFousfous implements Partie1 {
 								if(lineNumber%2 == i%2)
 									continue;
 
+								Joueur whitePlayer = this.controller.getWhitePlayer();
+								Joueur blackPlayer = this.controller.getBlackPlayer();
+
 								if(lignePlateau.charAt(i) == '-')
 									plateau[lineNumber][i] = EMPTY;
-								else if(lignePlateau.charAt(i) == WHITE_CHAR)
-									plateau[lineNumber][i] = WHITE;
-								else if(lignePlateau.charAt(i) == BLACK_CHAR)
-									plateau[lineNumber][i] = BLACK;
+								else if(lignePlateau.charAt(i) == whitePlayer.getCharacter())
+									plateau[lineNumber][i] = whitePlayer.getColor();
+								else if(lignePlateau.charAt(i) == blackPlayer.getCharacter())
+									plateau[lineNumber][i] = blackPlayer.getColor();
 							}
 						}
 					}
@@ -204,12 +151,16 @@ public class PlateauFousfous implements Partie1 {
 			for(int i=0;i<SIZE;i++)
 			{
 				save += String.valueOf(i+1) + " ";
+
+				Joueur whitePlayer = this.controller.getWhitePlayer();
+				Joueur blackPlayer = this.controller.getBlackPlayer();
+
 				for(int j=0;j<SIZE;j++)
 				{
-					if(plateau[i][j] == WHITE)
-						save += WHITE_CHAR;
-					else if(plateau[i][j] == BLACK)
-						save += BLACK_CHAR;
+					if(plateau[i][j] == whitePlayer.getColor())
+						save += whitePlayer.getCharacter();
+					else if(plateau[i][j] == blackPlayer.getColor())
+						save += blackPlayer.getCharacter();
 					else
 						save += "-";
 				}
@@ -229,9 +180,13 @@ public class PlateauFousfous implements Partie1 {
 	//Return true is you are threatening an enemy after your move
 	public boolean isThreatening(int startRow, int startColumn, String player)
 	{
+		if(plateau[startRow][startColumn] != EMPTY)
+			return false;
+
 		boolean threatening = false;
 
-		int enemy = getEnemy(player);
+		Joueur currentPlayer = this.controller.getPlayerByName(player);
+		Joueur currentEnemy = this.controller.getEnemyByName(player);
 
 		for(int row=-1;row<=1;row+=2)
 		{
@@ -244,10 +199,11 @@ public class PlateauFousfous implements Partie1 {
 					testRow += row;
 					testColumn += col;
 
-					if(plateau[testRow][testColumn] == enemy)
-					{
+					if(plateau[testRow][testColumn] == currentPlayer.getColor())
+						break;
+
+					if(plateau[testRow][testColumn] == currentEnemy.getColor())
 						return true;
-					}
 				}
 			}
 		}
@@ -258,13 +214,13 @@ public class PlateauFousfous implements Partie1 {
 	//Return true if a move is valid
 	public boolean estValide(String move, String player)
 	{
-		int ally = getAlly(player);
-		int enemy = getEnemy(player);
-
 		CoupFousfous coup = new CoupFousfous(move);
 
+		Joueur currentPlayer = this.controller.getPlayerByName(player);
+		Joueur currentEnemy = this.controller.getEnemyByName(player);
+
 		//If piece to move doesn't belong to the player
-		if(plateau[coup.startRow][coup.startColumn] != ally)
+		if(plateau[coup.startRow][coup.startColumn] != currentPlayer.getColor())
 			return false;
 
 		//If non-playable case
@@ -276,7 +232,7 @@ public class PlateauFousfous implements Partie1 {
 			return false;
 
 		//If taking enemy piece
-		if(plateau[coup.endRow][coup.endColumn] == enemy)
+		if(plateau[coup.endRow][coup.endColumn] == currentEnemy.getColor())
 			return true;
 
 		//If is threating after move return true
@@ -285,19 +241,19 @@ public class PlateauFousfous implements Partie1 {
 
 	public String[] mouvementPossibles(String player)
 	{
-		int ally = getAlly(player);
-		int enemy = getEnemy(player);
-
 		boolean hasTakenEnemy = false;
 
 		ArrayList<String> coupsPossibles = new ArrayList<String>();
 		ArrayList<CoupFousfous> coupsPossiblesTemp = new ArrayList<CoupFousfous>();
 
+		Joueur currentPlayer = this.controller.getPlayerByName(player);
+		Joueur currentEnemy = this.controller.getEnemyByName(player);
+
 		for(int i=0;i<SIZE;i++)
 		{
 			for(int j=0;j<SIZE;j++)
 			{
-				if(plateau[i][j] == ally)
+				if(plateau[i][j] == currentPlayer.getColor())
 				{
 					hasTakenEnemy = false;
 					coupsPossiblesTemp = new ArrayList<CoupFousfous>();
@@ -314,8 +270,13 @@ public class PlateauFousfous implements Partie1 {
 								testColumn += col;
 								CoupFousfous coup = new CoupFousfous(j,i,testColumn,testRow);
 
-								//If has taken moves
-								if(plateau[testRow][testColumn] == enemy)
+								//New
+								if(plateau[testRow][testColumn] == currentPlayer.getColor())
+									break;
+								//New
+
+								//If has taken enemy
+								if(plateau[testRow][testColumn] == currentEnemy.getColor())
 								{
 									coup.setTakeEnemy(true);
 									hasTakenEnemy = true;
@@ -333,7 +294,6 @@ public class PlateauFousfous implements Partie1 {
 					//Remove bad moves
 					for(int k=0;k<coupsPossiblesTemp.size();k++)
 					{
-						System.out.println(coupsPossiblesTemp.get(k));	
 						if(hasTakenEnemy && !coupsPossiblesTemp.get(k).takeEnemy)
 						{
 							coupsPossiblesTemp.remove(k);
@@ -358,27 +318,34 @@ public class PlateauFousfous implements Partie1 {
 
 	public void play(String move, String player)
 	{
+		System.out.println(player+" essaie de jouer le coup "+move);
+
+		Joueur whitePlayer = this.controller.getWhitePlayer();
+		Joueur blackPlayer = this.controller.getBlackPlayer();
+
 		if(estValide(move,player))
 		{
-			int ally = getAlly(player);
-			int enemy = getEnemy(player);
+			System.out.println("Coup "+move+" joué par "+player);
 
 			CoupFousfous coup = new CoupFousfous(move);
-			MoveHistory.push(move,plateau[coup.startRow][coup.startColumn],plateau[coup.endRow][coup.endColumn],scoreWhite,scoreBlack);
+			MoveHistory.push(move,plateau[coup.startRow][coup.startColumn],plateau[coup.endRow][coup.endColumn],whitePlayer.getScore(),blackPlayer.getScore());
 
-			if(plateau[coup.endRow][coup.endColumn] == enemy)
-				incrementScore(player);
+			if(player == whitePlayer.getName() && plateau[coup.endRow][coup.endColumn] == blackPlayer.getColor())
+				whitePlayer.incrementScore();
+			else if(player == blackPlayer.getName() && plateau[coup.endRow][coup.endColumn] == whitePlayer.getColor())
+				blackPlayer.incrementScore();
 
 			plateau[coup.endRow][coup.endColumn] = plateau[coup.startRow][coup.startColumn];
 			plateau[coup.startRow][coup.startColumn] = EMPTY;
-
-
 		}
 	}
 
 	public boolean finDePartie()
 	{
-		if(scoreWhite >= 16 || scoreBlack >= 16)
+		Joueur whitePlayer = this.controller.getWhitePlayer();
+		Joueur blackPlayer = this.controller.getBlackPlayer();
+
+		if(whitePlayer.getScore() >= 16 || blackPlayer.getScore() >= 16)
 			return true;
 		return false;
 	}
@@ -393,6 +360,9 @@ public class PlateauFousfous implements Partie1 {
 
 	public String toString() 
 	{
+		Joueur whitePlayer = this.controller.getWhitePlayer();
+		Joueur blackPlayer = this.controller.getBlackPlayer();
+
 		String res = "";
 		res += "% ABCDEFGH  \n";
 		for(int i=0;i<SIZE;i++)
@@ -400,17 +370,18 @@ public class PlateauFousfous implements Partie1 {
 			res += String.valueOf(i+1) + " ";
 			for(int j=0;j<SIZE;j++)
 			{
-				if(plateau[i][j] == WHITE)
-					res += WHITE_CHAR;
-				else if(plateau[i][j] == BLACK)
-					res += BLACK_CHAR;
+				if(plateau[i][j] == whitePlayer.getColor())
+					res += whitePlayer.getCharacter();
+				else if(plateau[i][j] == blackPlayer.getColor())
+					res += blackPlayer.getCharacter();
 				else
 					res += "-";
 			}
 			res += " " + String.valueOf(i+1) + "\n";
 		}
-		res += "Score white player : "+scoreWhite+"\n";
-		res += "Score black player : "+scoreBlack+"\n";
+		res += "Score white player : "+whitePlayer.getScore()+"\n";
+		res += "Score black player : "+blackPlayer.getScore()+"\n";
+
 		return res;
 	}
 
@@ -419,7 +390,7 @@ public class PlateauFousfous implements Partie1 {
 		out.println(this.toString());		
 	}
 
-   public static void main (String[] args)
+   /*public static void main (String[] args)
    {
         //New game
         PlateauFousfous game = new PlateauFousfous();
@@ -458,6 +429,6 @@ public class PlateauFousfous implements Partie1 {
         //Popping last move 
         MoveHistory.pop();
         System.out.println(game);            
-   }
+   }*/
 }
 
