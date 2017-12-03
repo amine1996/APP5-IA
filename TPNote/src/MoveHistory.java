@@ -23,9 +23,9 @@ public final class MoveHistory
 		oldScoresBlack = new ArrayList<Integer>();
 	}
 
-    public static void setController(PartieFousfous controller)
+    public static void setController(PartieFousfous pController)
     {
-        controller = controller;
+        controller = pController;
         game = controller.getGame();
     }
 
@@ -55,6 +55,7 @@ public final class MoveHistory
 
             game.setCase(lastMove.endRow,lastMove.endColumn,lastEndState);
             game.setCase(lastMove.startRow,lastMove.startColumn,lastStartState);
+
             controller.getWhitePlayer().setScore(lastScoreWhite);
             controller.getBlackPlayer().setScore(lastScoreBlack);
 

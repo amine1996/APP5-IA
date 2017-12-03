@@ -2,6 +2,7 @@ package fousfous;
 
 import fousfous.IJoueur;
 import fousfous.PlateauFousfous;
+import fousfous.MoveHistory;
 import fousfous.Joueur;
 
 public class PartieFousfous implements IJoueur
@@ -16,6 +17,7 @@ public class PartieFousfous implements IJoueur
     public PartieFousfous()
     {
         this.game = new PlateauFousfous(this);
+
         MoveHistory.setController(this);
 
         this.whitePlayer = new Joueur(PlateauFousfous.WHITE,"white",'b');
@@ -49,8 +51,7 @@ public class PartieFousfous implements IJoueur
 			{
 				this.game.play(coupsPossibles[i],playerName);
 				System.out.println("Mon coup  : "+coupsPossibles[i]);
-                System.out.println(this.game);
-				return coupsPossibles[i];
+                return coupsPossibles[i];
 			}
 		}
 

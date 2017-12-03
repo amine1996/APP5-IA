@@ -1,0 +1,88 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>Intelligence Artificielle</title>
+</head>
+
+<body>
+
+<h2>Devoir</h2>
+
+<h3>Les Fous-Fous</h3>
+
+<strong> Date limite d'envoi du projet : 30 novembre 2017.</strong>
+
+
+<p> Pour pouvoir lancer le serveur de jeu en réseau, vous avez besoin 
+d'intégrer votre propre projet avec les 4 classes du paquetage <code>fousfous</code> que vous trouverez <a href="https://www.lri.fr/~ma/Polytech_App5/devoir/devoir_fousfous.zip"> ici </a>. Vous devez télécharger ces sources java et les mettre dans un répertoire (qui fait office de paquetage) appelé <code>fousfous</code>. Ces quatres classes sont :
+   </p><ul><li> <code>fousfous.Applet</code> est la classe 
+permettant de gérer une applet permettant un affichage graphique du 
+plateau de jeu. Attention, lors des parties, le dernier coup n'est pas 
+affiché.</li>
+<li> <code>fousfous.ClientJeu</code> est le client réseau permettant de 
+faire circuler vos coups en messages vers (et de) l'arbitre, via une 
+connection réseau. La communication avec votre IA se fait via 
+l'interface <code>fousfous.IJoueur</code>.</li>
+<li> <code>fousfous.IJoueur</code> est l'interface définissant les méthodes que vous devez implanter pour entrer dans le tournoi, et permettre à <code>ClientJeu</code> de communiquer avec vous. Vous devez étudier cette interface et l'implanter avec votre propre classe IA. </li>
+<li><code>fousfous.Solo</code> est une classe contenant une méthode <code>main</code> et mettant en relation deux classes <code>IJoueur</code>
+ pour qu'elles jouent l'une contre l'autre.  Cela vous permettra de 
+mettre au point votre IA en conditions presques réelles du tournoi 
+(attention : sans vérifier le dépassement de temps, ni la légalité des 
+coups), en chargeant dynamiquement les classes que vous pourrez lui 
+donner en paramètres. 
+</li></ul>
+
+
+<p> L'archive
+JAR contenant les classes (compilées) du serveur de jeu en réseau est
+disponible que vous trouvez <a href="https://www.lri.fr/~ma/Polytech_App5/devoir/obfousfous.jar"> ici</a>. Pour lancer le serveur, il faut lancer la commande suivante, après avoir récupéré le .jar comme il se doit :<br>
+<code>
+java -cp obfousfous.jar fousfous.ServeurJeu 1234 1
+</code>
+</p>
+
+<p>Cette commande permet de lancer un ServeurJeu sur la machine 
+courante. Vous noterez que le serveur est indépendant, à l'intérieur de 
+son propre jar et vous n'avez pas à le placer avec votre propre projet. 
+ Sur
+   cet exemple, le serveur attend des connections sur le port de la 
+machine locale, numéro 1234. </p>
+
+<p>Une fois que le serveur est lancé, il faut lancer deux ClientJeu,
+chacun avec une classe de IJoueur à charger. Pour cela, il faut
+obligatoirement que ClientJeu soit compilé avec la même version Java
+que votre IJoueur. Comme chaque ClientJeu communique avec le serveur
+via le réseau, chaque joueur pourra être compilé avec sa propre
+version de Java.  Vous devrez <strong>impérativement</strong> compiler ces
+fichiers avec votre projet pour entrer dans le tournoi.  </p>
+
+<p> Pour lancer un ClientJeu, en supposant par exemple qu'on veuille lancer la classe <code>JoueurSuperFort</code> (qui implante la classe <code>IJoueur</code>), et en supposant que tout le projet est dans un paquetage nommé <code>fousfous</code> il faut compiler le tout et lancer : <br>
+<code>
+java -cp . fousfous.ClientJeu fousfous.JoueurSuperFort localhost 1234
+</code>
+</p>
+
+<p>Le <code>ClientJeu</code> va charger la classe <code>fousfous.JoueurSuperFort</code>
+ (que vous avez créé) et se connecter sur le serveur qui devrait être 
+sur la machine localhost, sur le port 1234. Vous noterez qu'il faut 
+faire cela deux fois, de manière à connecter deux joueurs. Au total, 
+vous aurez donc 3 terminaux shell qui s'agiteront! Vous pouvez aussi 
+changer à loisir les classes dont vous avez les sources, dans la mesure 
+où seuls les coups circulent sur le réseau, sous forme de chaines de 
+caractères (et non des objets java). </p>
+
+<p> Nous vous fournissons aussi, dans l'archive jar donnée ci-dessus, un
+ joueur aléatoire pour tester vos IA. Pour lancer ce joueur aléatoire, 
+il faut lancer :<br>
+<code>
+java -cp obfousfous.jar fousfous.ClientJeu fousfous.JoueurAleatoire localhost 1234
+</code>
+</p>
+
+
+
+<strong> A rendre: </strong>
+<li> Le rapport (cf. indications dans le sujet) </li>
+ <li> Les sources de votre projet </li>
+ <li> Un .jar executable Nom1Nom2.jar 
+</li>
+</body></html>

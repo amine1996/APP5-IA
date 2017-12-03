@@ -58,7 +58,7 @@ public class PlateauFousfous implements Partie1{
 			}
 		}
 	}
-
+	
 	//Set value for a coordinates in the game
 	public void setCase(int row, int col, int value)
 	{
