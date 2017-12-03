@@ -65,6 +65,12 @@ public class PlateauFousfous implements Partie1{
 		plateau[row][col] = value;
 	}
 
+	//Set value for a coordinates in the game
+	public int getCase(int row, int col)
+	{
+		return plateau[row][col];
+	}
+
 	/************* Méthodes de l'interface Partie1    ****************/
 
 	public void setFromFile(String fileName)
@@ -177,11 +183,42 @@ public class PlateauFousfous implements Partie1{
 		}
 	}
 
-	//Return true is you are threatening an enemy after your move
+	//Return true if you are threatening an enemy after your move
 	public boolean isThreatening(int startRow, int startColumn, String player)
 	{
 		if(plateau[startRow][startColumn] != EMPTY)
 			return false;
+
+		boolean threatening = false;
+
+		Joueur currentPlayer = this.controller.getPlayerByName(player);
+		Joueur currentEnemy = this.controller.getEnemyByName(player);
+
+		for(int row=-1;row<=1;row+=2)
+		{
+			for(int col=-1;col<=1;col+=2)
+			{
+				int testRow = startRow;
+				int testColumn = startColumn;
+				while((testRow+row < SIZE && testRow+row >= 0) && (testColumn+col < SIZE && testColumn+col  >= 0))
+				{
+					testRow += row;
+					testColumn += col;
+
+					if(plateau[testRow][testColumn] == currentPlayer.getColor())
+						break;
+
+					if(plateau[testRow][testColumn] == currentEnemy.getColor())
+						return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public boolean isThreatening2(int startRow, int startColumn, String player)
+	{
 
 		boolean threatening = false;
 
@@ -304,7 +341,8 @@ public class PlateauFousfous implements Partie1{
 					//Add good moves
 					for(int k=0;k<coupsPossiblesTemp.size();k++)
 					{
-						coupsPossibles.add(coupsPossiblesTemp.get(k).move);
+						if(estValide(coupsPossiblesTemp.get(k).move, player))
+							coupsPossibles.add(coupsPossiblesTemp.get(k).move);
 					}
 				}
 			}
@@ -318,26 +356,25 @@ public class PlateauFousfous implements Partie1{
 
 	public void play(String move, String player)
 	{
-		System.out.println(player+" essaie de jouer le coup "+move);
+		//System.out.println(player+" essaie de jouer le coup "+move);
 
 		Joueur whitePlayer = this.controller.getWhitePlayer();
 		Joueur blackPlayer = this.controller.getBlackPlayer();
 
-		if(estValide(move,player))
-		{
-			System.out.println("Coup "+move+" joué par "+player);
 
-			CoupFousfous coup = new CoupFousfous(move);
-			MoveHistory.push(move,plateau[coup.startRow][coup.startColumn],plateau[coup.endRow][coup.endColumn],whitePlayer.getScore(),blackPlayer.getScore());
+		//System.out.println("Coup "+move+" joué par "+player);
 
-			if(player == whitePlayer.getName() && plateau[coup.endRow][coup.endColumn] == blackPlayer.getColor())
-				whitePlayer.incrementScore();
-			else if(player == blackPlayer.getName() && plateau[coup.endRow][coup.endColumn] == whitePlayer.getColor())
-				blackPlayer.incrementScore();
+		CoupFousfous coup = new CoupFousfous(move);
+		MoveHistory.push(move,plateau[coup.startRow][coup.startColumn],plateau[coup.endRow][coup.endColumn],whitePlayer.getScore(),blackPlayer.getScore());
 
-			plateau[coup.endRow][coup.endColumn] = plateau[coup.startRow][coup.startColumn];
-			plateau[coup.startRow][coup.startColumn] = EMPTY;
-		}
+		if(player == whitePlayer.getName() && plateau[coup.endRow][coup.endColumn] == blackPlayer.getColor())
+			whitePlayer.incrementScore();
+		else if(player == blackPlayer.getName() && plateau[coup.endRow][coup.endColumn] == whitePlayer.getColor())
+			blackPlayer.incrementScore();
+
+		plateau[coup.endRow][coup.endColumn] = plateau[coup.startRow][coup.startColumn];
+		plateau[coup.startRow][coup.startColumn] = EMPTY;
+	
 	}
 
 	public boolean finDePartie()

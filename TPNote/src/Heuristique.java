@@ -14,5 +14,5 @@ public abstract class Heuristique
         this.game = game;
     }
 
-    public abstract int eval();
+    public abstract int eval(Joueur j);
 }

@@ -1,18 +1,22 @@
 package fousfous;
 
+import java.util.ArrayList;
+
 import fousfous.IJoueur;
 import fousfous.PlateauFousfous;
 import fousfous.MoveHistory;
 import fousfous.Joueur;
+import fousfous.Minimax;
 
 public class PartieFousfous implements IJoueur
 {
-    public final static String binoName = "Lin Chen";
+    public final static String binoName = "Ismail Girard";
     public int myColor;
 
     private Joueur whitePlayer;
     private Joueur blackPlayer;
     private PlateauFousfous game;
+    private Minimax minMax;
 
     public PartieFousfous()
     {
@@ -22,6 +26,8 @@ public class PartieFousfous implements IJoueur
 
         this.whitePlayer = new Joueur(PlateauFousfous.WHITE,"white",'b');
         this.blackPlayer = new Joueur(PlateauFousfous.BLACK,"black",'n');
+
+
     }
 
     /*********** Interface IJoueur ****************/
@@ -32,6 +38,7 @@ public class PartieFousfous implements IJoueur
 
         this.getMyPlayer().setBrain(new BestHeuristique(this,this.game));
         this.getMyEnemy().setBrain(new RetardedHeuristique(this,this.game));
+        minMax = new Minimax(new BestHeuristique(this, game), this.getMyPlayer(), this.getMyEnemy());
     }
 
     public int getNumJoueur()
@@ -45,15 +52,14 @@ public class PartieFousfous implements IJoueur
 
 		String[] coupsPossibles = this.game.mouvementPossibles(playerName);
 
-		for(int i=0;i<coupsPossibles.length; i++)
-		{
-			if(this.game.estValide(coupsPossibles[i],playerName))
-			{
-				this.game.play(coupsPossibles[i],playerName);
-				System.out.println("Mon coup  : "+coupsPossibles[i]);
-                return coupsPossibles[i];
-			}
-		}
+        if(coupsPossibles.length > 0){
+            String coup = minMax.meilleurCoup(game);
+
+            this.game.play(coup, playerName);
+            System.out.println("Mon coup ("+playerName+")  : "+coup);
+            System.out.println("Mon score : " + this.getMyPlayer().getScore() + " Score ennemi : "+ this.getMyEnemy().getScore());
+            return coup;
+        }
 
 		return "Aucun coup possible";
 	}

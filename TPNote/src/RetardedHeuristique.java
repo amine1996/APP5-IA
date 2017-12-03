@@ -11,7 +11,7 @@ public class RetardedHeuristique extends Heuristique
         super(controller,game);
     }
 
-    public int eval()
+    public int eval(Joueur j)
     {
         return -1;
     }
